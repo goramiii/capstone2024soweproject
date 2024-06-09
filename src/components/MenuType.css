@@ -1,41 +1,65 @@
-/* src/components/MenuType.css */
 .menu-type-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #EFEFEF;
+    min-height: 100vh; /* 높이를 최소 100vh로 설정하여 모든 콘텐츠 감싸기 */
     text-align: center;
     padding: 20px;
-  }
-  
-  .logo {
-    width: 150px;
+    box-sizing: border-box;
+    position: relative; /* 하단 바의 절대 위치를 기준으로 설정 */
+}
+
+.home-logo {
     margin-bottom: 20px;
-  }
-  
-  h2 {
-    margin-bottom: 40px;
-    font-size: 24px;
-  }
-  
-  .menu-sections {
+    max-width: 150px;
+}
+
+h2 {
+    font-size: 28px;  /* 글씨 크기 줄이기 */
+    margin: 10px 0;
+    color: black;
+}
+
+.menu-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 40px;  /* 각 패딩 사이 간격 증가 */
+    margin-top: 20px;  /* 로고와 메뉴 사이 간격 증가 */
+}
+
+.menu-button {
+    width: 471px;
+    height: 462px;
+    background-color: white;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 20px;
-  }
-  
-  .menu-button {
-    width: 150px;
-    text-align: center;
     cursor: pointer;
-  }
-  
-  .menu-button img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+    border-radius: 53px;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+.menu-button img {
+    max-width: 100%;
+    max-height: 70%;
     margin-bottom: 10px;
-  }
-  
-  .menu-button span {
+}
+
+.menu-button span {
     display: block;
-    font-size: 18px;
-  }
-  
+    font-size: 36px;  /* 글씨 크기 크게 */
+    font-weight: bold;
+    color: black;
+}
+
+.menu-button:hover {
+    background-color: #f8f8f8;
+}

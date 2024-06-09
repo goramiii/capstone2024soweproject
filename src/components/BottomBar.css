@@ -1,0 +1,37 @@
+.bottom-bar {
+    position: absolute; /* 절대 위치로 설정 */
+    bottom: 20px; /* 컨테이너 하단에서 20px 떨어지게 설정 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(50% - 20px); /* 패딩과 맞추기 위해 20px씩 양쪽에서 빼줌 */
+    background-color: #FFC107; /* 배경 색상 */
+    height: 30px; /* 높이를 절반으로 줄임 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px; /* 전체 둥근 모서리 */
+    padding: 0 10px; /* 패딩 조정 */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+.back-button, .cart-button {
+    width: 20px; /* 버튼 크기 줄이기 */
+    height: 20px; /* 버튼 크기 줄이기 */
+    background-color: white;
+    border-radius: 50%;
+}
+
+.back-button {
+    background-image: url('/path/to/back-icon.png'); /* 뒤로 가기 아이콘 */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px; /* 아이콘 크기 줄이기 */
+}
+
+.cart-button {
+    background-image: url('/path/to/cart-icon.png'); /* 장바구니 아이콘 */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px; /* 아이콘 크기 줄이기 */
+}

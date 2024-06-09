@@ -1,50 +1,169 @@
-import React, { useState, useEffect } from 'react'; // React와 훅(useState, useEffect)을 임포트합니다.
-import { useParams, Link, useNavigate } from 'react-router-dom'; // React Router DOM의 훅(useParams, useNavigate)과 Link 컴포넌트를 임포트합니다.
-import axios from 'axios'; // axios 라이브러리를 임포트하여 HTTP 요청을 처리합니다.
-import './MenuDetail.css'; // 컴포넌트의 CSS 파일을 임포트합니다.
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './MenuDetail.css';
+import homelogo from 'C:/Capstone/sowe/src/components/assets/homelogo.png';
+import cartimage from 'C:/Capstone/sowe/src/components/assets/cartImage.png';
 
-function MenuDetail() { // MenuDetail 컴포넌트를 정의합니다.
-  const { type } = useParams(); // URL에서 "type" 파라미터를 가져옵니다
-  const [menuItems, setMenuItems] = useState([]); // 메뉴 항목들을 저장할 상태를 정의합니다. 초기값은 빈 배열입니다.
-  const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate 훅을 사용합니다.
+function MenuDetail() {
+  const { type } = useParams();
+  const [menuItems, setMenuItems] = useState([]);
+  const [greasiness, setGreasiness] = useState(3);
+  const [hardness, setHardness] = useState(3);
+  const [spiciness, setSpiciness] = useState(3);
+  const [showFilter, setShowFilter] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => { // 컴포넌트가 렌더링될 때와 "type"이 변경될 때마다 실행되는 훅입니다.
-    const fetchMenuItems = async () => { // 비동기 함수 fetchMenuItems를 정의합니다.
+  useEffect(() => {
+    const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/menu/${type}`); // 서버로부터 메뉴 항목들을 가져옵니다.
-        setMenuItems(response.data); // 가져온 데이터를 상태에 저장합니다.
+        const response = await axios.get(`http://127.0.0.1:5000/menu/${type}`);
+        setMenuItems(response.data);
       } catch (error) {
-        console.error("Error fetching menu items:", error); // 에러 발생 시 콘솔에 에러 메시지를 출력합니다.
+        console.error("Error fetching menu items:", error);
       }
     };
 
-    fetchMenuItems(); // fetchMenuItems 함수를 호출하여 메뉴 항목들을 가져옵니다.
-  }, [type]); // "type"이 변경될 때마다 useEffect가 실행됩니다.
+    fetchMenuItems();
+  }, [type]);
+
+  const handleFilterApply = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:5000/filter`, {
+        params: {
+          category: type,
+          greasiness,
+          hardness,
+          spiciness
+        }
+      });
+      setMenuItems(response.data);
+      setShowFilter(false); // 필터 적용 후 팝업 닫기
+    } catch (error) {
+      console.error("Error fetching filtered menu items:", error);
+    }
+  };
 
   const handleItemClick = (item) => {
     const productName = item.collection_name;
     navigate(`/product/${productName}/${type}`);
-};
-  
+  };
+
+  const handleCategoryClick = (category) => {
+    navigate(`/menu-details/${category}`);
+  };
+
+  const toggleFilter = () => {
+    setShowFilter(!showFilter);
+  };
 
   return (
-    <div className="menu-details-container"> 
-      <h1>{type} Menu</h1> 
-      <div className="menu-items"> 
-        {menuItems.map(item => ( // 메뉴 항목들을 맵핑하여 각각의 메뉴 아이템 컴포넌트를 생성합니다.
-          <div 
-            key={item.collection_name} // 각 메뉴 항목에 고유한 키를 설정합니다.
-            className="menu-item" 
-            onClick={() => handleItemClick(item)} // 메뉴 항목 클릭 시 handleItemClick 함수를 호출합니다.
-          >
-            <h2>{item.collection_name}</h2>
-            <img src={item.img.link} alt={item.collection_name} className="menu-image" /> 
+    <div className="menu-details-container">
+      <header className="header">
+        <div className="header-left">
+          <button className="filter-button" onClick={toggleFilter}>맛조절</button>
+        </div>
+        <div className="header-right">
+          <img src={homelogo} alt="Home Logo" className="home-logo" />
+          <span className="title">주문하기</span>
+        </div>
+      </header>
+
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <button className="nav-link" onClick={() => handleCategoryClick('burger')}>버거</button>
+              </li>
+              <li className="nav-item">
+                <button className="nav-link" onClick={() => handleCategoryClick('McMorning')}>맥모닝</button>
+              </li>
+              <li className="nav-item">
+                <button className="nav-link" onClick={() => handleCategoryClick('desserts')}>디저트</button>
+              </li>
+              <li className="nav-item">
+                <button className="nav-link" onClick={() => handleCategoryClick('McCafe')}>맥카페</button>
+              </li>
+              <li className="nav-item">
+                <button className="nav-link" onClick={() => handleCategoryClick('sides')}>사이드</button>
+              </li>
+              <li className="nav-item">
+                <button className="nav-link" onClick={() => handleCategoryClick('drinks')}>음료</button>
+              </li>
+            </ul>
           </div>
-        ))}
+        </div>
+      </nav>
+
+      <div className={`filter-popup ${showFilter ? 'show' : ''}`}>
+        <div className="filter-popup-content">
+          <h2>맛 조절</h2>
+          <div className="filter-input">
+            <label>
+              기름짐: {greasiness}
+              <input
+                type="range"
+                min="1"
+                max="5"
+                value={greasiness}
+                onChange={(e) => setGreasiness(Number(e.target.value))}
+              />
+            </label>
+          </div>
+          <div className="filter-input">
+            <label>
+              단단함: {hardness}
+              <input
+                type="range"
+                min="1"
+                max="5"
+                value={hardness}
+                onChange={(e) => setHardness(Number(e.target.value))}
+              />
+            </label>
+          </div>
+          <div className="filter-input">
+            <label>
+              맵기: {spiciness}
+              <input
+                type="range"
+                min="1"
+                max="5"
+                value={spiciness}
+                onChange={(e) => setSpiciness(Number(e.target.value))}
+              />
+            </label>
+          </div>
+          <button onClick={handleFilterApply}>적용하기</button>
+        </div>
       </div>
-      <Link to="/cart" className="cart-button">장바구니로 이동</Link> 
+
+      <div className={`body2 ${showFilter ? 'dimmed' : ''}`}>
+        <div className="menu-items">
+          {menuItems.map((item, index) => (
+            <div 
+              key={`${item.collection_name}-${index}`}
+              className="menu-item"
+              onClick={() => handleItemClick(item)}
+            >
+              <img src={item.img.link} alt={item.collection_name} className="menu-image" />
+              <h2>{item.collection_name}</h2>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <footer className="footer">
+        <button className="cart-button" onClick={() => navigate('/cart')}>
+          <img src={cartimage} alt="Cart" className="cart-icon" />
+        </button>
+      </footer>
     </div>
   );
 }
 
-export default MenuDetail; // MenuDetail 컴포넌트를 익스포트합니다.
+export default MenuDetail;
